@@ -1,0 +1,46 @@
+#myContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.main-content {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px;
+    margin: 10px auto; /* Vertically spaced and centered */
+    width: 90%; /* Narrower width */
+    max-width: 900px; /* Maximum width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+h1 {
+    font-size: 3em; /* Increased font size for the title */
+    white-space: normal; /* Allow the title to wrap to the next line */
+    overflow: visible; /* Ensure that the overflow text is visible */
+    text-overflow: clip; /* Default clipping of overflow text */
+    margin-bottom: 0.5em;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        /* Existing styles... */
+    }
+
+    h1 {
+        font-size: 2em; /* Adjust font size for smaller screens if necessary */
+    }
+}
+/* Style the form and inputs */
+.form-inline .form-control {
+    margin-right: 5px; /* Space between input box and button */
+}
+
+.btn-primary {
+    background-color: #0056b3; /* A nicer shade of blue */
+    border-color: #004085; /* Border color */
+}

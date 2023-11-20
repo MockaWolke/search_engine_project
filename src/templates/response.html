@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ReverseApp</title>
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            .search-result {
+                padding: 20px;
+                border-bottom: 1px solid #eaeaea;
+            }
+            .search-result:last-child {
+                border-bottom: none;
+            }
+            .search-result h3 {
+                margin-bottom: 5px;
+            }
+            .search-result a {
+                text-decoration: none;
+                color: #007bff;
+            }
+            .search-result a:hover {
+                text-decoration: underline;
+            }
+            .search-snippet {
+                color: #545454;
+            }
+            .search-keyword {
+                font-weight: bold;
+                background-color: yellow;
+            }
+            .container {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="my-4">Search Results</h1>
+            <!-- Iterate through the results and display them -->
+            {% for url in rev %}
+            <div class="search-result">
+                <h3><a href="{{ url }}">{{ url }}</a></h3>
+                <p class="search-snippet">
+                    This is a snippet from the page that contains the search keywords...
+                    <span class="search-keyword">Keyword</span> in context.
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Include Bootstrap JS and its dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
