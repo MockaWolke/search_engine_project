@@ -1,3 +1,4 @@
+<!-- start.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/search_style.css') }}" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,18 +18,27 @@
     <div id="myContainer"></div>
     <div class="main-content">
         
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center mt-5">
-                <h1>Welcome to Our Search Engine</h1>
-                <p>Search within the "<strong>{{ current_index }}</strong>" index:</p>
-                <form action="/query" method="get" class="form-inline justify-content-center mt-3">
-                    <div class="form-group mx-sm-3 mb-2">
-                        <label for="queryInput" class="sr-only">Query:</label>
-                        <input type="text" class="form-control" id="queryInput" name="q" placeholder="Enter search query">
-                    </div>
-                    <button type="submit" class="btn btn-primary mb-2">Query</button>
-                </form>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center mt-5">
+                    <h1>Welcome to Our Search Engine</h1>
+                    <p>Search within the "<strong>{{ current_index }}</strong>" index:</p>
+                    <form action="{{ url_for('query_index') }}" method="get" class="mb-3">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="q" placeholder="Search again..." aria-label="Search query">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                        <p class="page-size-text">Number of results per page:</p>
+                        <div class="page-size-selection">
+                            <button type="button" class="btn btn-page-size active" data-value="5">5</button>
+                            <button type="button" class="btn btn-page-size" data-value="10">10</button>
+                            <button type="button" class="btn btn-page-size" data-value="15">15</button>
+                        </div>
+                        <input type="hidden" name="s" id="pageSizeValue" value="5"> <!-- Hidden input to store page size value -->
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -38,6 +49,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{{ url_for('static', filename='js/particle-system.js') }}"></script>
-
+    <script>
+        // Get all page size buttons and the hidden input
+        const pageSizeButtons = document.querySelectorAll('.btn-page-size');
+        const pageSizeValue = document.getElementById('pageSizeValue');
+    
+        // Add click event to each page size button
+        pageSizeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Update hidden input value
+                pageSizeValue.value = this.getAttribute('data-value');
+                // Remove 'active' class from all buttons
+                pageSizeButtons.forEach(btn => btn.classList.remove('active'));
+                // Add 'active' class to clicked button
+                this.classList.add('active');
+            });
+        });
+        document.addEventListener('DOMContentLoaded', (event) => {
+        const defaultButton = document.querySelector('.btn-page-size[data-value="5"]');
+        if (defaultButton) {
+            defaultButton.classList.add('active');
+        }
+    });
+    </script>
+    
 </body>
 </html>

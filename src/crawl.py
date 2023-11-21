@@ -2,7 +2,7 @@ from . import SCHEMA, REPO_PATH, INDEXES_DIR
 from whoosh.index import create_in
 import requests
 from tqdm import tqdm
-from requests import ReadTimeout, TooManyRedirects, HTTPError, ConnectionError
+from requests import ReadTimeout, TooManyRedirects, HTTPError, ConnectionError, Response
 from bs4 import BeautifulSoup
 import os
 from typing import List, Optional
@@ -86,6 +86,21 @@ def sample_weighted_by_len(
     return np.random.choice(np.asarray(links), k, False, weights).tolist()
 
 
+def extract_text(soup: BeautifulSoup) -> str:
+    for script_or_style in soup(["script", "style"]):
+        script_or_style.extract()
+
+    # Remove all links
+    for a_tag in soup.find_all("a"):
+        a_tag.extract()
+
+    # Now get the text
+    return soup.get_text()
+
+
+to_utf8 = lambda x: x.encode("utf-8").decode("utf-8")
+
+
 def parse_links(
     domain: str,
     limit_page_visited: int,
@@ -115,47 +130,28 @@ def parse_links(
 
         soup = BeautifulSoup(req.content, "html.parser")
 
-        text = soup.text.encode("utf-8").decode("utf-8")
+        # we first extract the next links
+
+        possible_links = extract_next_links(
+            domain, max_url_len, have_or_will_visit, main_domain, soup
+        )
+
+        # because here we delete all to receive the text
+
+        text = extract_text(soup)
 
         logger.debug(f"Adding {url}")
 
         writer.add_document(
-            url=url.encode("utf-8").decode("utf-8"),
-            content=text,
-            title=soup.title.text.encode("utf-8").decode("utf-8"),
+            url=to_utf8(url),
+            content=to_utf8(text),
+            title=to_utf8(soup.title.text),
         )
 
         # add new links
 
         process_bar.update(1)
         succesfully_added += 1
-
-        possible_links = []
-
-        for link in soup.find_all("a", href=True):
-            link_url: str = link["href"]
-
-            parsed_link = urlparse(link_url)
-            stripped_link_url = parsed_link._replace(fragment="").geturl()
-
-            if stripped_link_url == "":
-                continue
-
-            absolute_link_url = urljoin(domain, link_url)
-
-            # Check if the link's domain is the same as the main domain
-            if get_domain(absolute_link_url) != main_domain:
-                continue
-
-            if max_url_len is not None and len(absolute_link_url) > max_url_len:
-                continue
-
-            if ".php?" in absolute_link_url:
-                continue
-
-            # Check if the link has already been scheduled or visited
-            if absolute_link_url not in have_or_will_visit:
-                possible_links.append(absolute_link_url)
 
         if limit_page_visited is None:
             new_links = possible_links
@@ -169,3 +165,33 @@ def parse_links(
         links.extend(new_links)
 
     return succesfully_added
+
+
+def extract_next_links(domain, max_url_len, have_or_will_visit, main_domain, soup):
+    possible_links = []
+
+    for link in soup.find_all("a", href=True):
+        link_url: str = link["href"]
+
+        parsed_link = urlparse(link_url)
+        stripped_link_url = parsed_link._replace(fragment="").geturl()
+
+        if stripped_link_url == "":
+            continue
+
+        absolute_link_url = urljoin(domain, link_url)
+
+        # Check if the link's domain is the same as the main domain
+        if get_domain(absolute_link_url) != main_domain:
+            continue
+
+        if max_url_len is not None and len(absolute_link_url) > max_url_len:
+            continue
+
+        if ".php?" in absolute_link_url:
+            continue
+
+            # Check if the link has already been scheduled or visited
+        if absolute_link_url not in have_or_will_visit:
+            possible_links.append(absolute_link_url)
+    return possible_links

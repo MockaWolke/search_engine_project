@@ -1,3 +1,4 @@
+/* !style.css */
 #myContainer {
     position: fixed;
     top: 0;
@@ -6,6 +7,38 @@
     height: 100%;
     z-index: -1;
 }
+
+/* Reduce the max-width to avoid too much empty space */
+.main-content {
+    max-width: 600px; /* Adjust this value to your preference */
+    /* Other styles remain unchanged */
+}
+
+/* Adjust the input field to be wider and match the style from the first picture */
+.form-inline .form-control, .input-group .form-control {
+    width: 70%; /* Make the input field take up the full width of its parent */
+    margin-right: 0px; /* Space between input box and button */
+    
+}
+
+
+/* Update button styling to match the input field */
+.input-group-append .btn-primary {
+    border-radius: 20; /* Optional: Makes the button have square edges */
+    /* Other styles remain unchanged */
+}
+
+/* Ensure the title is displayed on one line */
+h1 {
+    font-size: 2.5em; /* Adjust font size to ensure it fits on one line */
+    white-space: nowrap; /* Prevent the title from wrapping */
+    overflow: visible; /* Hide overflow */
+    text-overflow: ellipsis; /* Add an ellipsis if the title is too long */
+    margin-bottom: 0.5em;
+
+}
+
+
 .main-content {
     position: relative;
     z-index: 1;
@@ -18,14 +51,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
 }
 
-h1 {
-    font-size: 3em; /* Increased font size for the title */
-    white-space: normal; /* Allow the title to wrap to the next line */
-    overflow: visible; /* Ensure that the overflow text is visible */
-    text-overflow: clip; /* Default clipping of overflow text */
-    margin-bottom: 0.5em;
-}
-
 @media (max-width: 768px) {
     .main-content {
         /* Existing styles... */
@@ -35,12 +60,42 @@ h1 {
         font-size: 2em; /* Adjust font size for smaller screens if necessary */
     }
 }
-/* Style the form and inputs */
-.form-inline .form-control {
-    margin-right: 5px; /* Space between input box and button */
+
+.page-size-selector {
+    width: auto; /* To fit content size */
 }
 
-.btn-primary {
-    background-color: #0056b3; /* A nicer shade of blue */
-    border-color: #004085; /* Border color */
+.page-size-selector .form-control {
+    display: inline-block; /* For inline display */
+    width: auto; /* To fit content size */
+    margin-right: 10px; /* Space between dropdown and button */
+}
+/* Style the page size buttons */
+
+
+
+/* Notation next to the page size buttons */
+.page-size-notation {
+    font-size: 0.9rem; /* Smaller font size for the notation */
+    color: #6c757d; /* Bootstrap's default text-muted color */
+    margin-bottom: 0.5rem; /* Space below the notation */
+}
+
+.btn-page-size {
+    background-color: #ffffff; /* White background */
+    color: #000000; /* Blue text color to match the theme */
+    border: 1px solid #ced4da; /* Bootstrap's default border color */
+    margin-right: 0.5rem; /* Space between buttons */
+}
+
+/* Style for the selected page size button */
+.btn-page-size.active, .btn-page-size.active:hover, .btn-page-size.active:focus {
+    color: #060606; /* White text color */
+    background-color: #007bff; /* Light gray background on hover */
+
+}
+
+/* Style for hover state of non-selected buttons */
+.btn-page-size:hover {
+    background-color: #007bff; /* Light gray background on hover */
 }

@@ -1,0 +1,32 @@
+/* Place this in a file named styles.css in your static folder */
+.search-result {
+    padding: 20px;
+    border-bottom: 1px solid #eaeaea;
+}
+.search-result:last-child {
+    border-bottom: none;
+}
+.search-result h3 {
+    margin-bottom: 5px;
+}
+.search-result a {
+    text-decoration: none;
+    color: #007bff;
+}
+.search-result a:hover {
+    text-decoration: underline;
+}
+.search-snippet {
+    color: #545454;
+}
+.search-keyword {
+    font-weight: bold;
+    background-color: yellow;
+}
+.container {
+    margin-top: 20px;
+}
+.no-results {
+    text-align: left;
+    margin-top: 10px;
+}
