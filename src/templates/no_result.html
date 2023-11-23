@@ -12,7 +12,7 @@
             <h1 class="my-4">No Results Found</h1>
             <p>We couldn't find any results for "<strong>{{ q }}</strong>". Please try again with different keywords.</p>
             <!-- Search again form (optional) -->
-            <form action="{{ url_for('query_index') }}" method="get" class="mb-3">
+            <form action="{{ url_for('query_index') }}" method="get" class="mb-3" onsubmit="return validateForm()" >
                 <div class="row">
                     <div class="col-sm-8 col-md-6">
                         <div class="input-group">
@@ -30,4 +30,24 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
+
+    <script>
+
+    function validateForm() {
+        const searchInput = document.querySelector('input[name="q"]');
+        if (searchInput.value.trim().length === 0) {
+            alert('Please enter a search query.');
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+
+    // Attach the validateForm function to the form's submit event
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    </script>
 </html>

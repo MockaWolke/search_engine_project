@@ -4,6 +4,10 @@
 
 `unzip indexes.zip`
 
+## Test
+
+`pytest src/test_api.py`
+
 ## Ideen
 
 - Pages mit highlighted search results (seiten nochmal laden)

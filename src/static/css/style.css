@@ -82,15 +82,15 @@ h1 {
 }
 
 .btn-page-size {
-    background-color: #ffffff; /* White background */
-    color: #000000; /* Blue text color to match the theme */
-    border: 1px solid #ced4da; /* Bootstrap's default border color */
-    margin-right: 0.5rem; /* Space between buttons */
+    background-color: #383232; /* White background */
+    color: #ffffff; /* Blue text color to match the theme */
+    border: 0px solid #ced4da; /* Bootstrap's default border color */
+    margin-right: 0rem; /* Space between buttons */
 }
 
 /* Style for the selected page size button */
 .btn-page-size.active, .btn-page-size.active:hover, .btn-page-size.active:focus {
-    color: #060606; /* White text color */
+    color: #ffffff; /* White text color */
     background-color: #007bff; /* Light gray background on hover */
 
 }

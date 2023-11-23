@@ -37,4 +37,4 @@ with open(
     ),
     "w",
 ) as f:
-    json.dump(vars(args), f)
+    json.dump(vars(args), f, indent=4)

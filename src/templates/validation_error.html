@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ReverseApp - No Results</title>
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Include Shared CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/searchstyle.css') }}">
+    </head>
+    <body>
+        <div class="container no-results">
+            <h1 class="my-4">Oh No! Something Went Wrong</h1>
+            <p>We encountered the following issue with your request: "<strong>{{ error_message }}</strong>". Please try again.</p>
+            <!-- Search again form -->
+            <form action="{{ url_for('query_index') }}" method="get" class="mb-3">
+                <!-- ... form content as in your example ... -->
+            </form>
+        </div>  
+        <!-- Include Bootstrap JS and its dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
