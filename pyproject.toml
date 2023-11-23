@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=40.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["search_engine"]
+
+[project]
+name = "search_engine"
+version = "0.1.0"
+description = "A short description of your project."
+authors = [{name = "Felix Hammer", email = "fhammer@uos.de"}]
+readme = "README.md"
+requires-python = "==3.10"
+
+dependencies = [
+    "annotated_types==0.6.0",
+    "beautifulsoup4==4.12.2",
+    "Flask==3.0.0",
+    "loguru==0.7.2",
+    "numpy==1.26.2",
+    "pydantic==2.5.2",
+    "pytest==7.4.3",
+    "Requests==2.31.0",
+    "tqdm==4.66.1",
+    "typing_extensions==4.8.0",
+    "Whoosh==2.7.4"
+]

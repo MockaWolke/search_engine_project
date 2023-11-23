@@ -1,7 +1,7 @@
 from whoosh.qparser import QueryParser
 from flask import Flask, request, render_template
-from src.query import get_index_for_query
-from src import (
+from search_engine.query import get_index_for_query
+from search_engine import (
     REPO_PATH,
     create_QueryParameters,
     QueryParameters,

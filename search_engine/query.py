@@ -1,6 +1,6 @@
 import os
 from whoosh import index
-from . import INDEXES_DIR
+from search_engine import INDEXES_DIR
 
 
 def get_index_for_query(index_dir):
