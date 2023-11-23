@@ -46,7 +46,7 @@ def query_index():
     with index.searcher() as searcher:
         # find entries with the words 'first' AND 'last'
         query = QueryParser("content", index.schema).parse(args.query)
-        results = searcher.search(query, limit=200)
+        results = searcher.search(query, limit=1000)
 
         result_urls = [(r["url"], r["title"]) for r in results]
 
@@ -55,15 +55,17 @@ def query_index():
         for i in range(math.ceil(len(result_urls) / args.page_size))
     ]
 
+    n_results = len(result_urls)
+
     if args.page_number >= len(results_batched):
         logger.debug(
-            f"Not Found! Q: {args.query} - P: {args.page_number} - T: {len(result_urls)} - P: {args.page_size} -B: {len(results_batched)}"
+            f"Not Found! Q: {args.query} - P: {args.page_number} - T: {n_results} - P: {args.page_size} -B: {len(results_batched)}"
         )
 
         return render_template("no_result.html", q=args.query)  # no_response.html
 
     logger.debug(
-        f"Q: {args.query} - P: {args.page_number} - T: {len(result_urls)} - P: {args.page_size} -B: {len(results_batched)}"
+        f"Q: {args.query} - P: {args.page_number} - T: {n_results} - P: {args.page_size} -B: {len(results_batched)}"
     )
 
     results = results_batched[args.page_number]
@@ -76,4 +78,5 @@ def query_index():
         page_size=args.page_size,
         page_before_exists=args.page_number > 0,
         page_after_exists=args.page_number + 1 < len(results_batched),
+        n_results=n_results,
     )

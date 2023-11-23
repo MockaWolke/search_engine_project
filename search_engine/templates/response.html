@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="container">
-            <h1 class="my-4">Search Results for "{{ q }}"</h1>
+            <h1 class="my-4">Found <span style="color: #007bff;">{{ n_results }}</span> search results for "{{ q }}"</h1>
             <!-- Iterate through the results and display them -->
             {% for url, title in rev %}
             <div class="search-result">
