@@ -1,11 +1,11 @@
-import pytest
-from .myapi import app
-from flask import url_for
-from . import REPO_PATH
+from src import REPO_PATH
 import os
 
 os.chdir(REPO_PATH)
 print("Testing at ", REPO_PATH)
+import pytest
+from src.myapi import app
+from flask import url_for
 
 
 @pytest.fixture
