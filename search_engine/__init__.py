@@ -2,7 +2,8 @@ from whoosh.fields import Schema, TEXT, ID
 from pathlib import Path
 from annotated_types import Gt, Len
 from typing_extensions import Annotated
-from pydantic import BaseModel, constr, PositiveInt
+from dataclasses import dataclass, field
+from typing import Optional
 
 ATLEASTZERO = Annotated[int, Gt(-1)]
 
@@ -18,24 +19,40 @@ INDEXES_DIR = REPO_PATH / "indexes"
 DEFAULT_PAGE_SIZE = 5
 
 
-class QueryParameters(BaseModel):
-    query: constr(
-        strip_whitespace=True,
-        min_length=1,
-    )  # ensures a string, and can add more constraints
-    page_number: ATLEASTZERO = 0  # ensures an integer that is positive
-    page_size: PositiveInt = DEFAULT_PAGE_SIZE  # ensures an integer that is positive
+@dataclass
+class QueryParameters:
+    query: str
+    page_number: int = 0
+    page_size: int = DEFAULT_PAGE_SIZE
+
+    def __post_init__(self):
+        if not self.query or not self.query.strip():
+            raise ValueError("Query must be a non-empty string.")
+        # Type conversion and validation for 'page_number'
+        try:
+            self.page_number = int(self.page_number)
+        except ValueError:
+            raise ValueError("Page number must be an integer.")
+
+        if self.page_number < 0:
+            raise ValueError("Page number must be at least zero.")
+
+        # Type conversion and validation for 'page_size'
+        try:
+            self.page_size = int(self.page_size)
+        except ValueError:
+            raise ValueError("Page size must be an integer.")
+
+        if self.page_size <= 0:
+            raise ValueError("Page size must be a positive integer.")
 
 
 def create_QueryParameters(**kwargs) -> QueryParameters:
-    return QueryParameters(**{k: v for k, v in kwargs.items() if v is not None})
+    # Filter out None values
+    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    return QueryParameters(**filtered_kwargs)
 
 
-def format_pydantic_errors(errors):
-    """Format Pydantic validation errors into readable messages."""
-    messages = []
-    for error in errors:
-        field = error["loc"][0]
-        error_msg = error["msg"]
-        messages.append(f"{field.capitalize().replace('_', ' ')}: {error_msg}.")
-    return " ".join(messages)
+def format_dataclass_errors(exception) -> str:
+    """Format dataclass validation errors into readable messages."""
+    return str(exception)

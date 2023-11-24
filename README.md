@@ -1,6 +1,6 @@
 ## Install
 
-`pip install -r req.txt`
+`pip install -e .`
 
 `unzip indexes.zip`
 

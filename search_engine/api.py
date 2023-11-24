@@ -1,16 +1,14 @@
-from whoosh.qparser import QueryParser
 from flask import Flask, request, render_template
-from search_engine.query import get_index_for_query
+from search_engine.query import get_results
 from search_engine import (
     REPO_PATH,
     create_QueryParameters,
     QueryParameters,
-    format_pydantic_errors,
+    format_dataclass_errors,
 )
 import os
 import math
 from loguru import logger
-from pydantic import ValidationError
 
 os.chdir(REPO_PATH)
 
@@ -31,32 +29,31 @@ def start():
 
 @app.route("/query")
 def query_index():
+    # validate args with pydantic model
+
     try:
         args = create_QueryParameters(
             query=request.args.get("q"),
             page_number=request.args.get("p"),
             page_size=request.args.get("s"),
         )
-    except ValidationError as e:
-        error_message = format_pydantic_errors(e.errors())
+
+    # if fails -> retrn no results.html
+    except ValueError as e:
+        error_message = format_dataclass_errors(e)
         return render_template("validation_error.html", error_message=error_message)
 
-    index = get_index_for_query(CURRENT_INDEX)
+    # get results for query
+    result_urls = get_results(args.query, CURRENT_INDEX)
+    n_results = len(result_urls)
 
-    with index.searcher() as searcher:
-        # find entries with the words 'first' AND 'last'
-        query = QueryParser("content", index.schema).parse(args.query)
-        results = searcher.search(query, limit=1000)
-
-        result_urls = [(r["url"], r["title"]) for r in results]
-
+    # batch them given page_size
     results_batched = [
         result_urls[i * args.page_size : (i + 1) * args.page_size]
         for i in range(math.ceil(len(result_urls) / args.page_size))
     ]
 
-    n_results = len(result_urls)
-
+    # if to high page size or no results return no results page
     if args.page_number >= len(results_batched):
         logger.debug(
             f"Not Found! Q: {args.query} - P: {args.page_number} - T: {n_results} - P: {args.page_size} -B: {len(results_batched)}"

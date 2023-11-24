@@ -1,6 +1,6 @@
 import os
-from src import REPO_PATH, INDEXES_DIR
-from src.crawl import parse_domain_index
+from search_engine import REPO_PATH, INDEXES_DIR
+from search_engine.crawl import parse_domain_index
 import argparse
 import json
 

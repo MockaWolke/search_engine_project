@@ -11,7 +11,21 @@
         <div class="container">
             <h1 class="my-4">Found <span style="color: #007bff;">{{ n_results }}</span> search results for "{{ q }}"</h1>
             <!-- Iterate through the results and display them -->
+            
+            <form action="{{ url_for('query_index') }}" method="get" class="mb-3" onsubmit="return validateForm()" >
+                <div class="row">
+                    <div class="col-sm-8 col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="q" placeholder="Search again..." aria-label="Search query">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
             {% for url, title in rev %}
+            
             <div class="search-result">
                 <h3><a href="{{ url }}">{{ title }}</a></h3>
                 <p class="search-snippet">

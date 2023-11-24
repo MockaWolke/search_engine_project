@@ -1,3 +1,4 @@
+"""This is a script for crawling"""
 from search_engine import SCHEMA, REPO_PATH, INDEXES_DIR
 from whoosh.index import create_in
 import requests
