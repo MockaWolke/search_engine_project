@@ -1,6 +1,7 @@
-"""This allows  to unzip even without unzip unix"
+"""This allows  to unzip even without unzip unix" """
 import zipfile
 import os
+
 
 def unzip_file(zip_path, extract_to=None):
     """
@@ -19,10 +20,11 @@ def unzip_file(zip_path, extract_to=None):
         os.makedirs(extract_to)
 
     # Open the zip file
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(extract_to)
 
+
 # Example usage
-zip_file_path = 'indexes.zip'  # Replace with your zip file path
-output_directory = 'indexes'  # Replace with your desired output directory
+zip_file_path = "indexes.zip"  # Replace with your zip file path
+output_directory = "indexes"  # Replace with your desired output directory
 unzip_file(zip_file_path, output_directory)

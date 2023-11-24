@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from search_engine.query import get_results
+from search_engine.query import get_results, get_index_for_query
 from search_engine import (
     REPO_PATH,
     create_QueryParameters,
@@ -9,15 +9,26 @@ from search_engine import (
 import os
 import math
 from loguru import logger
+from dotenv import load_dotenv
 
 os.chdir(REPO_PATH)
+
+load_dotenv()
+
 
 logger.add("api.log", rotation="5 MB")
 
 app = Flask(__name__)
 
 
-CURRENT_INDEX = "wikipedia_big"
+# --------------- Check for correct index ---------------
+CURRENT_INDEX = os.environ.get("CURRENT_INDEX")
+if CURRENT_INDEX is None:
+    raise ValueError("Dot env needs a CURRENT_INDEX to be set")
+
+get_index_for_query(CURRENT_INDEX)
+# --------------------------------------------------------
+
 
 logger.info(f"Starting API with '{CURRENT_INDEX}' index.")
 
