@@ -5,7 +5,7 @@ ort.set_default_logger_severity(3)
 from transformers import AutoTokenizer
 from optimum.onnxruntime import ORTModelForSeq2SeqLM
 from transformers import pipeline
-from search_engine import REPO_PATH
+from search_engine import REPO_PATH, USE_MODEL
 from typing import Tuple
 import string
 import re
@@ -34,6 +34,9 @@ def fix(query: str) -> str:
 
 
 def fix_spelling(query: str) -> Tuple[str, bool]:
+    if not USE_MODEL:
+        return query, False
+
     has_punctioation = any(i in PUNCTUATION for i in query)
 
     corrected = fix(query)

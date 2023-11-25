@@ -20,6 +20,8 @@ SEARCH_LIMIT = int(os.environ.get("SEARCH_LIMIT", 0))
 if SEARCH_LIMIT <= 0:
     raise ValueError("Dot env needs a SEARCH_LIMIT to be set")
 
+USE_MODEL = int(os.environ.get("USE_MODEL", 0))
+
 
 ATLEASTZERO = Annotated[int, Gt(-1)]
 
