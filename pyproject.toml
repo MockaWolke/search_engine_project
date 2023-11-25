@@ -14,17 +14,17 @@ readme = "README.md"
 requires-python = "==3.10.*"
 
 dependencies = [
-    annotated_types==0.6.0
-    beautifulsoup4==4.12.2
-    Flask==3.0.0
-    loguru==0.7.2
-    numpy==1.26.2
-    onnxruntime==1.16.3
-    optimum==1.14.1
-    python-dotenv==1.0.0
-    Requests==2.31.0
-    tqdm==4.66.1
-    transformers==4.35.2
-    typing_extensions==4.8.0
-    Whoosh==2.7.4
+    "annotated_types==0.6.0",
+    "beautifulsoup4==4.12.2",
+    "Flask==3.0.0",
+    "loguru==0.7.2",
+    "numpy==1.26.2",
+    "onnxruntime==1.16.3",
+    "optimum==1.14.1",
+    "python-dotenv==1.0.0",
+    "Requests==2.31.0",
+    "tqdm==4.66.1",
+    "transformers==4.35.2",
+    "typing_extensions==4.8.0",
+    "Whoosh==2.7.4",
 ]
