@@ -10,7 +10,11 @@ from search_engine import (
 import os
 import math
 from loguru import logger
+
+logger.info("before")
 from search_engine.spelling_fix import fix_spelling
+
+logger.info("alt")
 
 
 app = Flask(__name__)
