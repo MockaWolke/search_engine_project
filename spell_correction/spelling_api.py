@@ -8,7 +8,9 @@ from optimum.onnxruntime import ORTModelForSeq2SeqLM
 from transformers import pipeline
 from search_engine import REPO_PATH
 from loguru import logger
-import uvicorn
+import uvicorn  # for pipreqs
+import optimum  # for pipreqs
+import time
 import os
 
 os.chdir(REPO_PATH)
@@ -45,8 +47,11 @@ class Query(BaseModel):
 @app.post("/fix_spelling/")
 def api_fix_spelling(query: Query) -> str:
     try:
+        start = time.time()
         response = fix(query.text)
-        logger.info(f"Chagned '{query} to {response}'")
+        logger.info(
+            f"Chagned '{query} to {response} - Took {time.time()-start :.4} seconds.'"
+        )
         return response
     except Exception as e:
         logger.exception(f"Failed for {query}")
