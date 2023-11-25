@@ -1,5 +1,5 @@
 import timeit
-from search_engine.spelling_fix import fix_spelling
+from search_engine.spelling_fix import fix
 
 
 queries = [
@@ -16,11 +16,11 @@ queries = [
 
 def loop_once():
     for q in queries:
-        fix_spelling(q)
+        fix(q)
 
 
 hundred_times = timeit.timeit(loop_once, number=100)
 
 time_per_query = hundred_times / 100 / len(queries)
 
-print(f"Took on average {time_per_query :.2f} seconds")
+print(f"Took on average {time_per_query :.8f} seconds")
