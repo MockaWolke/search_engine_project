@@ -7,15 +7,17 @@ from dotenv import load_dotenv
 import os
 from loguru import logger
 
-logger.add("api.log", rotation="5 MB")
-
 REPO_PATH = Path(__file__).parent.parent
-
 os.chdir(REPO_PATH)
 
-logger.info("LETs go")
+logger.add("api.log", rotation="5 MB")
 
-load_dotenv(REPO_PATH / ".env")
+logger.info("Start logging")
+
+
+assert load_dotenv(REPO_PATH / ".env")
+
+logger.info("Have dot env")
 
 
 CURRENT_INDEX = os.environ.get("CURRENT_INDEX")
