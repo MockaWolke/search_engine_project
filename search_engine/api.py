@@ -12,7 +12,6 @@ import math
 from loguru import logger
 from search_engine.spelling_fix import fix_spelling
 
-logger.add("api.log", rotation="5 MB")
 
 app = Flask(__name__)
 

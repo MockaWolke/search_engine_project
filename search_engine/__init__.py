@@ -1,13 +1,19 @@
 from whoosh.fields import Schema, TEXT, ID
 from pathlib import Path
-from annotated_types import Gt, Len
+from annotated_types import Gt
 from typing_extensions import Annotated
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 from dotenv import load_dotenv
 import os
+from loguru import logger
+
+logger.add("api.log", rotation="5 MB")
 
 REPO_PATH = Path(__file__).parent.parent
+
+os.chdir(REPO_PATH)
+
+logger.info("LETs go")
 
 load_dotenv(REPO_PATH / ".env")
 
