@@ -4,6 +4,22 @@ from annotated_types import Gt, Len
 from typing_extensions import Annotated
 from dataclasses import dataclass, field
 from typing import Optional
+from dotenv import load_dotenv
+import os
+
+REPO_PATH = Path(__file__).parent.parent
+
+load_dotenv(REPO_PATH / ".env")
+
+
+CURRENT_INDEX = os.environ.get("CURRENT_INDEX")
+if CURRENT_INDEX is None:
+    raise ValueError("Dot env needs a CURRENT_INDEX to be set")
+
+SEARCH_LIMIT = int(os.environ.get("SEARCH_LIMIT", 0))
+if SEARCH_LIMIT <= 0:
+    raise ValueError("Dot env needs a SEARCH_LIMIT to be set")
+
 
 ATLEASTZERO = Annotated[int, Gt(-1)]
 
@@ -14,7 +30,6 @@ SCHEMA = Schema(
     content=TEXT(stored=False),
 )
 
-REPO_PATH = Path(__file__).parent.parent
 INDEXES_DIR = REPO_PATH / "indexes"
 DEFAULT_PAGE_SIZE = 5
 

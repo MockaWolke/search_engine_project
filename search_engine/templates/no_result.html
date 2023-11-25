@@ -11,6 +11,10 @@
         <div class="container no-results">
             <h1 class="my-4">No Results Found</h1>
             <p>We couldn't find any results for "<strong>{{ q }}</strong>". Please try again with different keywords.</p>
+
+            {% if query_corrected %}
+                <p><em>Note: Your search query was automatically corrected from "{{ original_query }}" to "{{ q }}".</em></p>
+            {% endif %}
             <!-- Search again form (optional) -->
             <form action="{{ url_for('query_index') }}" method="get" class="mb-3" onsubmit="return validateForm()" >
                 <div class="row">

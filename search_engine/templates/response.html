@@ -9,7 +9,13 @@
     </head>
     <body>
         <div class="container">
+
+
             <h1 class="my-4">Found <span style="color: #007bff;">{{ n_results }}</span> search results for "{{ q }}"</h1>
+
+            {% if query_corrected %}
+                <p><strong>Note:</strong> Your search query was automatically corrected from "{{ original_query }}" to "{{ q }}".</p>
+            {% endif %}
             <!-- Iterate through the results and display them -->
             
             <form action="{{ url_for('query_index') }}" method="get" class="mb-3" onsubmit="return validateForm()" >
@@ -24,16 +30,21 @@
                     </div>
                 </div>
             </form>
-            {% for url, title in rev %}
-            
+            {% for url, title, list_of_missing_terms in rev %}
             <div class="search-result">
                 <h3><a href="{{ url }}">{{ title }}</a></h3>
                 <p class="search-snippet">
                     This is a snippet from the page that contains the search keywords...
                     <span class="search-keyword">Keyword</span> in context.
                 </p>
+                {% if list_of_missing_terms %}
+                    <p class="missing-terms">
+                        <strong>Missing:</strong> {{ list_of_missing_terms | join(", ") }}
+                    </p>
+                {% endif %}
             </div>
-            {% endfor %}
+        {% endfor %}
+        
             
             <!-- Pagination Buttons -->
             <nav aria-label="Page navigation">
