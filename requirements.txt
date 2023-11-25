@@ -1,0 +1,16 @@
+annotated_types==0.6.0
+beautifulsoup4==4.12.2
+fastapi==0.104.1
+Flask==3.0.0
+loguru==0.7.2
+numpy==1.26.2
+onnxruntime==1.16.3
+optimum==1.14.1
+pydantic==2.5.2
+python-dotenv==1.0.0
+Requests==2.31.0
+tqdm==4.66.1
+transformers==4.35.2
+typing_extensions==4.8.0
+uvicorn==0.24.0.post1
+Whoosh==2.7.4

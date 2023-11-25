@@ -1,49 +1,41 @@
-import onnxruntime as ort
-
-ort.set_default_logger_severity(3)
-
-from transformers import AutoTokenizer
-from optimum.onnxruntime import ORTModelForSeq2SeqLM
-from transformers import pipeline
-from search_engine import REPO_PATH, USE_MODEL
+from search_engine import REPO_PATH, USE_MODEL, SPELL_PORT, SPELL_TIMEOUT
 from typing import Tuple
+import requests
+from loguru import logger
 import string
 import re
-import optimum
 
 PUNCTUATION = set(string.punctuation)
 
 
-tokenizer = AutoTokenizer.from_pretrained(
-    REPO_PATH / "spellchecking_onnx",
-)
-model = ORTModelForSeq2SeqLM.from_pretrained(
-    REPO_PATH / "spellchecking_onnx",
-)
-spelling_pipeline = pipeline(
-    "text2text-generation", model=model, device="cpu", tokenizer=tokenizer
-)
+def query_model(query: str) -> str:
+    response = requests.post(
+        f"http://localhost:{SPELL_PORT}/fix_spelling/",
+        json={"text": query},
+        timeout=SPELL_TIMEOUT,
+    )
 
+    response.raise_for_status()  # Raise an HTTPError for bad requests
+    corrected_text = response.json()
 
-def fix(query: str) -> str:
-    max_len = int(len(query) * 1.2)
-
-    model_output = spelling_pipeline(query, max_new_tokens=max_len)
-
-    return model_output[0]["generated_text"]
+    return corrected_text
 
 
 def fix_spelling(query: str) -> Tuple[str, bool]:
     if not USE_MODEL:
         return query, False
 
-    has_punctioation = any(i in PUNCTUATION for i in query)
+    try:
+        has_punctioation = any(i in PUNCTUATION for i in query)
 
-    corrected = fix(query)
+        corrected = query_model(query)
 
-    if not has_punctioation:
-        corrected = re.sub(r"[^\w\s?]", "", corrected)
+        if not has_punctioation:
+            corrected = re.sub(r"[^\w\s?]", "", corrected)
 
-    changed = query.lower() != corrected.lower()
+        changed = query.lower() != corrected.lower()
+        return corrected, changed
 
-    return corrected, changed
+    except Exception as e:
+        logger.exception(f"Request failed for {query}")
+        return query, False

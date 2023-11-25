@@ -6,6 +6,8 @@
 
 `python unzip.py`
 
+`uvicorn spelling_api:app --host 0.0.0.0 --port 8008`
+
 ## Test
 
 Then hopefully this work.

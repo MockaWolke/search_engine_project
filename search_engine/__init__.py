@@ -29,9 +29,8 @@ if SEARCH_LIMIT <= 0:
     raise ValueError("Dot env needs a SEARCH_LIMIT to be set")
 
 USE_MODEL = int(os.environ.get("USE_MODEL", 0))
-
-
-ATLEASTZERO = Annotated[int, Gt(-1)]
+SPELL_PORT = int(os.environ.get("SPELL_PORT", 8008))
+SPELL_TIMEOUT = int(os.environ.get("SPELL_TIMEOUT", 3))
 
 
 SCHEMA = Schema(
