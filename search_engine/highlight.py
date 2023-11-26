@@ -4,11 +4,35 @@ from typing import List, Set, Tuple
 from loguru import logger
 from search_engine.crawl import extract_text
 from search_engine.query import get_tokens
-from search_engine import WORD_WINDOW_LENGTH, RELOAD_TIMEOUT
+from search_engine import WORD_WINDOW_LENGTH, RELOAD_TIMEOUT, SPELL_PORT
 import time
 from loguru import logger
 
 to_utf8 = lambda x: x.encode("utf-8").decode("utf-8")
+
+
+def request_page_and_get_text(url: str, timeout: int) -> dict:
+    # Define the endpoint URL. Adjust the path as needed.
+    endpoint = f"http://localhost:{SPELL_PORT}/reload_text/"
+
+    # Send the POST request
+    try:
+        response = requests.post(
+            endpoint, json={"url": url, "timeout": timeout}, timeout=timeout
+        )
+
+        # Raise an HTTPError for bad requests
+        response.raise_for_status()
+
+        # Get the response data
+        response_data = response.json()
+
+        return response_data["text"], response_data["success"]
+
+    except requests.RequestException as e:
+        # Handle any request-related errors
+        logger.exception(f"Reload Request failed: {url}")
+        return "", False
 
 
 def request_page_and_get_text(url: str, timeout: int) -> tuple[str, bool]:
