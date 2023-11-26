@@ -35,26 +35,6 @@ def request_page_and_get_text(url: str, timeout: int) -> dict:
         return "", False
 
 
-def request_page_and_get_text(url: str, timeout: int) -> tuple[str, bool]:
-    try:
-        start_time = time.time()
-
-        req = requests.get(url, timeout=timeout)
-        req.raise_for_status()  # Raise an HTTPError for bad requests
-
-        soup = BeautifulSoup(req.content, "html.parser")
-
-        text = extract_text(soup)
-
-        logger.debug(f"Requesting {url} took {time.time()- start_time}")
-
-        return text, True
-    except Exception as e:
-        logger.error(f"Request failed for {url}: {e}")
-
-        return "", False
-
-
 def get_matches(splitted: List[str], matched_tokens: Set[str]) -> List[bool]:
     is_a_match = []
 
