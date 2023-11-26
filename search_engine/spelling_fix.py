@@ -44,7 +44,10 @@ def fix_spelling(query: str) -> Tuple[str, bool]:
         if not has_punctioation:
             corrected = re.sub(r"[^\w\s?]", "", corrected)
 
-        changed = query.lower() != corrected.lower()
+        changed = (
+            query.lower() != corrected.lower()
+            and query.lower() + "?" != corrected.lower()
+        )
         return corrected, changed
 
     except Exception as e:
