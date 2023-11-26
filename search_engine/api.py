@@ -10,11 +10,10 @@ from search_engine import (
 import os
 import math
 from loguru import logger
-
-logger.info("before")
 from search_engine.spelling_fix import fix_spelling
+from search_engine.highlight import highlight_result_page
 
-logger.info("alt")
+logger.add("api.log", rotation="5 MB")
 
 
 app = Flask(__name__)
@@ -86,12 +85,14 @@ def query_index():
 
     results = results_batched[args.page_number]
 
+    highlighted_results = highlight_result_page(results=results)
+
     return render_template(
         "response.html",
         q=query,
         query_corrected=query_corrected,
         original_query=original_query,
-        rev=results,
+        rev=highlighted_results,
         page=args.page_number,
         page_size=args.page_size,
         page_before_exists=args.page_number > 0,

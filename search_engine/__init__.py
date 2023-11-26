@@ -10,14 +10,8 @@ from loguru import logger
 REPO_PATH = Path(__file__).parent.parent
 os.chdir(REPO_PATH)
 
-logger.add("api.log", rotation="5 MB")
-
-logger.info("Start logging")
-
 
 assert load_dotenv(REPO_PATH / ".env")
-
-logger.info("Have dot env")
 
 
 CURRENT_INDEX = os.environ.get("CURRENT_INDEX")
@@ -31,6 +25,8 @@ if SEARCH_LIMIT <= 0:
 USE_MODEL = int(os.environ.get("USE_MODEL", 0))
 SPELL_PORT = int(os.environ.get("SPELL_PORT", 8008))
 SPELL_TIMEOUT = int(os.environ.get("SPELL_TIMEOUT", 3))
+RELOAD_TIMEOUT = int(os.environ.get("RELOAD_TIMEOUT", 1))
+WORD_WINDOW_LENGTH = int(os.environ.get("WORD_WINDOW_LENGTH", 10))
 
 
 SCHEMA = Schema(

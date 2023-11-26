@@ -40,7 +40,11 @@ class INDEX_LOADER:
         return cls._instance.index
 
 
-def search_and(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
+def search_and(
+    query: str, index_dir: str
+) -> List[Tuple[str, str, List[str], Set[str]]]:
+    tokens = get_tokens(query)
+
     current_index = INDEX_LOADER.load_index(index_dir)
 
     parser = QueryParser("content", current_index.schema)
@@ -52,14 +56,7 @@ def search_and(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
             limit=SEARCH_LIMIT,
         )
 
-        result_urls = [
-            (
-                r["url"],
-                r["title"],
-                [],
-            )
-            for r in results
-        ]
+        result_urls = [(r["url"], r["title"], [], tokens) for r in results]
 
     return result_urls
 
@@ -72,7 +69,7 @@ def convert_matched_terms(matched_term: List, query_tokens: List[str]) -> List[s
     return list(differnce)
 
 
-def search_or(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
+def search_or(query: str, index_dir: str) -> List[Tuple[str, str, List[str], Set[str]]]:
     tokens = get_tokens(query)
 
     current_index = INDEX_LOADER.load_index(index_dir)
@@ -88,6 +85,7 @@ def search_or(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
                 r["url"],
                 r["title"],
                 convert_matched_terms(r.matched_terms(), tokens),
+                tokens,
             )
             for r in results
         ]
@@ -97,7 +95,9 @@ def search_or(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
     return result_urls
 
 
-def get_results(query: str, index_dir: str) -> List[Tuple[str, str, List[str]]]:
+def get_results(
+    query: str, index_dir: str
+) -> List[Tuple[str, str, List[str], Set[str]]]:
     tokens = get_tokens(query)
 
     logger.debug(f"The search tokens: {tokens}")

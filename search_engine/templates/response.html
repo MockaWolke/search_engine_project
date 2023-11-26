@@ -30,12 +30,17 @@
                     </div>
                 </div>
             </form>
-            {% for url, title, list_of_missing_terms in rev %}
+            {% for url, title, list_of_missing_terms, highlighting_info in rev %}
             <div class="search-result">
                 <h3><a href="{{ url }}">{{ title }}</a></h3>
                 <p class="search-snippet">
-                    This is a snippet from the page that contains the search keywords...
-                    <span class="search-keyword">Keyword</span> in context.
+                    {% for word, highlight in highlighting_info %}
+                        {% if highlight %}
+                            <strong>{{ word }}</strong>
+                        {% else %}
+                            {{ word }}
+                        {% endif %} 
+                    {% endfor %}
                 </p>
                 {% if list_of_missing_terms %}
                     <p class="missing-terms">
