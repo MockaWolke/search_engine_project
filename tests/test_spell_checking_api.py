@@ -1,7 +1,10 @@
 import pytest
-from search_engine.spelling_fix import (
-    query_model,
-)  # Replace 'your_module' with the actual name of your Python file
+from search_engine.spelling_fix import query_model
+from search_engine import check_helper_api
+
+
+def test_if_api_active():
+    assert check_helper_api() == True
 
 
 # Test cases

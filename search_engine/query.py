@@ -96,22 +96,27 @@ def search_or(query: str, index_dir: str) -> List[Tuple[str, str, List[str], Set
 
 
 def get_results(
-    query: str, index_dir: str
+    query: str, index_dir: str, n_min_results: int
 ) -> List[Tuple[str, str, List[str], Set[str]]]:
     tokens = get_tokens(query)
+
+    if len(tokens) == 0:
+        logger.debug("Tokens empty for query {query}")
+        return []
 
     logger.debug(f"The search tokens: {tokens}")
 
     result_urls = search_and(query, index_dir)
 
-    if result_urls:
+    if len(result_urls) >= n_min_results:
         return result_urls
 
-    if len(tokens) == 0:
-        logger.debug(f"Could not find any results for {tokens}")
-
-        return []
+    logger.debug(f"Could not {n_min_results} with and, only {len(result_urls) }found.")
 
     logger.debug(f"Could not find and for {tokens}. Trying or.")
 
-    return search_or(query, index_dir)
+    or_results = search_or(query, index_dir)
+
+    logger.debug(f"Found {len(or_results) } or results.")
+
+    return result_urls + or_results

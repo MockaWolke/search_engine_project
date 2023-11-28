@@ -1,6 +1,6 @@
 import timeit
 import os
-from spelling_api import fix
+from helper_api.spellchecker import fix_spelling
 
 queries = [
     "these are badly spelled",
@@ -16,7 +16,7 @@ queries = [
 
 def loop_once():
     for q in queries:
-        fix(q)
+        fix_spelling(q)
 
 
 hundred_times = timeit.timeit(loop_once, number=100)

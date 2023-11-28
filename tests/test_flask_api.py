@@ -1,7 +1,3 @@
-from search_engine import REPO_PATH
-import os
-
-
 import pytest
 from search_engine.api import app
 from flask import url_for

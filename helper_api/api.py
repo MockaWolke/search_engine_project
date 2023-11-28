@@ -1,58 +1,43 @@
-import onnxruntime as ort
-
-ort.set_default_logger_severity(3)
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from transformers import AutoTokenizer
-from optimum.onnxruntime import ORTModelForSeq2SeqLM
-from transformers import pipeline
-from search_engine import REPO_PATH
+from fastapi import FastAPI, HTTPException, status
 from loguru import logger
-import uvicorn  # for pipreqs
-import optimum  # for pipreqs
 import requests
 from bs4 import BeautifulSoup
 import time
-import os
 from search_engine.crawl import extract_text
+from helper_api.spellchecker import fix_spelling
+from helper_api.shemas import HealthCheck, Query, ReloadTextQuery
 
-
-os.chdir(REPO_PATH)
-
-logger.add("spell.log", rotation="5 MB")
-
-
-tokenizer = AutoTokenizer.from_pretrained(
-    REPO_PATH / "spellchecking_onnx",
-)
-model = ORTModelForSeq2SeqLM.from_pretrained(
-    REPO_PATH / "spellchecking_onnx",
-)
-spelling_pipeline = pipeline(
-    "text2text-generation", model=model, device="cpu", tokenizer=tokenizer
-)
-
-
-def fix(query: str) -> str:
-    max_len = int(len(query) * 1.2)
-
-    model_output = spelling_pipeline(query, max_new_tokens=max_len)
-
-    return model_output[0]["generated_text"]
-
+logger.add("helper_api.log", rotation="5 MB")
 
 app = FastAPI()
 
 
-class Query(BaseModel):
-    text: str
+@app.get(
+    "/health",
+    tags=["healthcheck"],
+    summary="Perform a Health Check",
+    response_description="Return HTTP Status Code 200 (OK)",
+    status_code=status.HTTP_200_OK,
+    response_model=HealthCheck,
+)
+def get_health() -> HealthCheck:
+    """
+    ## Perform a Health Check
+    Endpoint to perform a healthcheck on. This endpoint can primarily be used Docker
+    to ensure a robust container orchestration and management is in place. Other
+    services which rely on proper functioning of the API service will not deploy if this
+    endpoint returns any other HTTP status code except 200 (OK).
+    Returns:
+        HealthCheck: Returns a JSON response with the health status
+    """
+    return HealthCheck(status="OK")
 
 
 @app.post("/fix_spelling/")
 def api_fix_spelling(query: Query) -> str:
     try:
         start = time.time()
-        response = fix(query.text)
+        response = fix_spelling(query.text)
         logger.info(
             f"Chagned '{query} to {response} - Took {time.time()-start :.4} seconds.'"
         )
@@ -60,11 +45,6 @@ def api_fix_spelling(query: Query) -> str:
     except Exception as e:
         logger.exception(f"Failed for {query}")
         raise HTTPException(status_code=500, detail=str(e))
-
-
-class ReloadTextQuery(BaseModel):
-    url: str
-    timeout: int = 10  # Default timeout value
 
 
 @app.post("/reload_text/")

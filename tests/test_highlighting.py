@@ -2,6 +2,11 @@ import pytest
 
 
 from search_engine.highlight import highlight_result_page
+from search_engine import check_helper_api
+
+
+def test_if_api_active():
+    assert check_helper_api() == True
 
 
 def test_highligting():

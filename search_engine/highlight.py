@@ -84,6 +84,7 @@ def highlight_result_page(results: list[Tuple[str, str, List[str], Set[str]]]):
         text, successs = request_page_and_get_text(url, timeout=RELOAD_TIMEOUT)
 
         if successs == False:
+            highlighted_results.append((url, title, missing, []))
             continue
 
         highlighting_info = highlight(text, matches)

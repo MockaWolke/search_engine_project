@@ -1,11 +1,10 @@
 from flask import Flask, request, render_template
 from search_engine.query import get_results, INDEX_LOADER
-from search_engine import (
-    REPO_PATH,
+from search_engine import REPO_PATH, CURRENT_INDEX, check_helper_api
+from search_engine.schemas import (
     create_QueryParameters,
     QueryParameters,
     format_dataclass_errors,
-    CURRENT_INDEX,
 )
 import os
 import math
@@ -16,10 +15,7 @@ from search_engine.highlight import highlight_result_page
 logger.add("api.log", rotation="5 MB")
 
 
-app = Flask(__name__)
-
-
-# --------------- Check for correct index ---------------
+# --------------- Check load correct index ---------------
 
 
 INDEX_LOADER.load_index(CURRENT_INDEX)
@@ -27,6 +23,9 @@ INDEX_LOADER.load_index(CURRENT_INDEX)
 
 
 logger.info(f"Starting API with '{CURRENT_INDEX}' index.")
+
+
+app = Flask(__name__)
 
 
 @app.route("/")
@@ -37,6 +36,9 @@ def start():
 @app.route("/query")
 def query_index():
     # validate args with pydantic model
+
+    if not check_helper_api():
+        return render_template("helper_api_down.html")
 
     try:
         args = create_QueryParameters(
@@ -57,7 +59,7 @@ def query_index():
         logger.debug(f"Corrected '{original_query}' to '{query}''")
 
     # get results for query
-    result_urls = get_results(query, CURRENT_INDEX)
+    result_urls = get_results(query, CURRENT_INDEX, args.page_size)
     n_results = len(result_urls)
 
     # batch them given page_size

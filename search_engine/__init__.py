@@ -1,17 +1,15 @@
 from whoosh.fields import Schema, TEXT, ID
 from pathlib import Path
-from annotated_types import Gt
-from typing_extensions import Annotated
-from dataclasses import dataclass
 from dotenv import load_dotenv
 import os
 from loguru import logger
+import requests
 
 REPO_PATH = Path(__file__).parent.parent
 os.chdir(REPO_PATH)
 
 
-assert load_dotenv(REPO_PATH / ".env")
+assert load_dotenv(REPO_PATH / ".env"), "Could not find a dont env"
 
 
 CURRENT_INDEX = os.environ.get("CURRENT_INDEX")
@@ -28,7 +26,6 @@ SPELL_TIMEOUT = int(os.environ.get("SPELL_TIMEOUT", 3))
 RELOAD_TIMEOUT = int(os.environ.get("RELOAD_TIMEOUT", 1))
 WORD_WINDOW_LENGTH = int(os.environ.get("WORD_WINDOW_LENGTH", 10))
 
-
 SCHEMA = Schema(
     url=ID(unique=True, stored=True),
     title=TEXT(stored=True),
@@ -36,43 +33,22 @@ SCHEMA = Schema(
 )
 
 INDEXES_DIR = REPO_PATH / "indexes"
-DEFAULT_PAGE_SIZE = 5
+DEFAULT_PAGE_SIZE = 10
 
 
-@dataclass
-class QueryParameters:
-    query: str
-    page_number: int = 0
-    page_size: int = DEFAULT_PAGE_SIZE
+def check_helper_api():
+    try:
+        logger.info(
+            f"Checking healt of http://localhost:{SPELL_PORT} with timeout {SPELL_TIMEOUT}"
+        )
+        endpoint = f"http://localhost:{SPELL_PORT}/health/"
 
-    def __post_init__(self):
-        if not self.query or not self.query.strip():
-            raise ValueError("Query must be a non-empty string.")
-        # Type conversion and validation for 'page_number'
-        try:
-            self.page_number = int(self.page_number)
-        except ValueError:
-            raise ValueError("Page number must be an integer.")
+        response = requests.get(endpoint, timeout=SPELL_TIMEOUT)
 
-        if self.page_number < 0:
-            raise ValueError("Page number must be at least zero.")
-
-        # Type conversion and validation for 'page_size'
-        try:
-            self.page_size = int(self.page_size)
-        except ValueError:
-            raise ValueError("Page size must be an integer.")
-
-        if self.page_size <= 0:
-            raise ValueError("Page size must be a positive integer.")
-
-
-def create_QueryParameters(**kwargs) -> QueryParameters:
-    # Filter out None values
-    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return QueryParameters(**filtered_kwargs)
-
-
-def format_dataclass_errors(exception) -> str:
-    """Format dataclass validation errors into readable messages."""
-    return str(exception)
+        # Raise an HTTPError for bad requests
+        response.raise_for_status()
+        logger.success(f"Received {response.status_code}")
+        return True
+    except Exception as e:
+        logger.exception("Helper api not available")
+        return False

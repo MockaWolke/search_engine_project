@@ -34,13 +34,18 @@
             <div class="search-result">
                 <h3><a href="{{ url }}">{{ title }}</a></h3>
                 <p class="search-snippet">
-                    {% for word, highlight in highlighting_info %}
-                        {% if highlight %}
-                            <strong>{{ word }}</strong>
-                        {% else %}
-                            {{ word }}
-                        {% endif %} 
-                    {% endfor %}
+                    {% if highlighting_info%}
+                        {% for word, highlight in highlighting_info %}
+                            {% if highlight %}
+                                <strong>{{ word }}</strong>
+                            {% else %}
+                                {{ word }}
+                            {% endif %} 
+                        {% endfor %}
+                    {$ else %}
+                    <span class="error-message">Could not recheck page  for highlighting.</span>
+                    {% endif %}
+
                 </p>
                 {% if list_of_missing_terms %}
                     <p class="missing-terms">
