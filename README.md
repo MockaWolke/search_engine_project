@@ -47,7 +47,9 @@ The crawler is limited to the specified domain and tries to find `-t` total vali
 
 - Due to compatibility issues with the Apache runtime, we created a small "helper_api" using Uvicorn and FastAPI.
 
-- To run it, use:
+- To run it, use in the helper_api dir:
+
+`uvicorn api:app --host 0.0.0.0 --port 8008`
 
 Ensure that this port corresponds to `SPELL_PORT` set in the `.env`.
 
